@@ -1,0 +1,176 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkSense | Live Map & Booking</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="static/CSS/dashboard_style.css">
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="glass" id="navbar">
+        <div class="container nav-content">
+            <div class="logo"><i class="fa-solid fa-car-tunnel"></i> ParkSense</div>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#map-section">Map</a></li>
+                <li><a href="#dashboard">Slots</a></li>
+            </ul>
+            <a href="login.html" class="btn btn-outline">
+            <i class="fa-solid fa-user"></i> Login
+        </a>
+
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero container">
+        <div style="flex: 1;">
+            <div style="display: inline-block; padding: 5px 15px; background: rgba(6, 182, 212, 0.1); border-radius: 20px; color: var(--primary); font-size: 0.9rem; margin-bottom: 20px; font-weight: 600;">✨ Smart City Integrated</div>
+            <h1 class="text-gradient">PARKSENSE</h1>
+            <p>Real-Time Parking Recommandation & Booking system</p>
+            <a href="#dashboard" class="btn btn-primary">Find Nearest Location</a>
+        </div>
+        <div style="flex: 1; display: flex; justify-content: center;">
+            <div class="phone-mockup">
+                <div style="width:100%; height:100%; background: url('data:image/png;base64,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')"></div>
+                <div style="position: absolute; bottom: 20px; left: 20px; right: 20px;"class="glass box">
+                    <h4 style="color:white">Your Spot: A-04</h4>
+                    <p style="color: #4ade80; font-size: 0.8rem;">Navigation Active</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAP SECTION -->
+    <section id="map-section" class="map-section">
+        <div class="container">
+            <h2 style="font-family: var(--font-head); margin-bottom: 20px;">Live Location Map</h2>
+            <div class="map-wrapper glass">
+                <div id="live-map"></div>
+            </div>
+            <p style="color: var(--text-muted); margin-top: 10px; font-size: 0.9rem;"><i class="fa-solid fa-location-dot"></i> Central Plaza Parking Garage (24/7)</p>
+        </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="dashboard-section">
+        <div class="container">
+            <h2 style="font-family: var(--font-head); margin-bottom: 30px;">Select a Slot</h2>
+            <div class="parking-container">
+                <!-- Sidebar -->
+                <div class="glass" style="padding: 20px; border-radius: var(--radius);">
+                    <h3>Floor Level</h3>
+                    <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;">
+                        <button class="btn btn-primary" style="justify-content: space-between; width: 100%;">Floor A <span>4 Free</span></button>
+                        <button class="btn btn-outline" style="justify-content: space-between; width: 100%;">Floor B <span>Full</span></button>
+                    </div>
+                </div>
+                
+                <!-- Grid -->
+                <div class="slot-grid glass" id="grid">
+                    <!-- JS will populate this -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BOOKING MODAL -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>Confirm Booking</h3>
+                <i class="fa-solid fa-xmark" style="cursor: pointer;" onclick="closeModal('bookingModal')"></i>
+            </div>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h1 id="selectedSlot" style="color: var(--primary); font-size: 2.5rem;">A-01</h1>
+                <p style="color: var(--success);">Available</p>
+            </div>
+
+            <form id="paymentForm" onsubmit="initiateRazorpay(event)">
+                <label style="font-size: 0.9rem; color: var(--text-muted);">Duration</label>
+                <select class="form-input" id="durationSelect">
+                    <option value="50">1 Hour - ₹50</option>
+                    <option value="90">2 Hours - ₹90</option>
+                    <option value="200">Daily Pass - ₹200</option>
+                </select>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    Pay & Generate QR
+                </button>
+            </form>
+            <div style="text-align: center; margin-top: 10px; font-size: 0.8rem; color: #666;">
+                Secured by Razorpay
+            </div>
+        </div>
+    </div>
+
+    <!-- E-RECEIPT MODAL -->
+    <div class="modal-overlay" id="receiptModal">
+        <div class="modal-card">
+            <div style="text-align: center;">
+                <h2 style="color: var(--success);"><i class="fa-solid fa-circle-check"></i> Booking Confirmed!</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Please scan this at the entry gate.</p>
+                
+                <div class="receipt-card">
+                    <div style="font-weight: bold; font-size: 1.2rem;">E-RECEIPT</div>
+                    <div style="border-bottom: 1px dashed #555; margin: 10px 0;"></div>
+                    
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                        <span style="color: var(--text-muted);">Slot:</span>
+                        <span id="receiptSlot" style="font-weight: bold;">--</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 5px;">
+                        <span style="color: var(--text-muted);">Amount:</span>
+                        <span id="receiptAmount" style="font-weight: bold;">--</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 5px;">
+                        <span style="color: var(--text-muted);">Trans ID:</span>
+                        <span id="receiptId" style="font-size: 0.8rem;">--</span>
+                    </div>
+
+                    <!-- DYNAMIC QR CODE API -->
+                    <div class="qr-container">
+                        <img id="dynamicQR" src="" alt="Booking QR">
+                    </div>
+                    
+                    <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="closeModal('receiptModal')">Close</button>
+                    <p style="font-size: 0.7rem; color: #555; margin-top: 10px;">Screenshot this receipt</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<!---------------- Chatbot page ------------------------->
+ <div id="chatbot">
+  <div class="chat-header">ParkSense Assistant</div>
+  <div id="chatMessages"></div>
+
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Ask about parking..." />
+    <button id="sendBtn">Send</button>
+  </div>
+</div>
+
+    <!------------------ Chatbot Floating Icon ----------------------->
+<button id="chatToggle" class="chat-icon">
+  🤖
+</button>
+
+
+
+    <!-- SCRIPTS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
+    <script src="static/script03.js"></script>
+</body>
+</html>
